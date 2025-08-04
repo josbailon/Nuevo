@@ -1,45 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>School Cafeteria Products</title>
+  <title>Productos de Farmacia</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2em; }
-    h1 { color: #2c3e50; }
-    table { border-collapse: collapse; width: 50%; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    th { background: #f4f4f4; }
+    body {
+      background: linear-gradient(120deg, #e0f7fa 0%, #f9fbe7 100%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .banner {
+      background: #43cea2;
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      padding: 2em 0 1em 0;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    }
+    .banner h1 {
+      font-size: 2.5em;
+      margin: 0.1em 0 0.4em 0;
+      letter-spacing: 1px;
+    }
+    .banner p {
+      margin: 0;
+      font-size: 1.1em;
+      font-weight: 400;
+      opacity: .93;
+    }
+    .container {
+      max-width: 850px;
+      margin: 2em auto;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 4px 24px rgba(52,152,219,0.08);
+      padding: 2em 2em 1em 2em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+      font-size: 1em;
+    }
+    th, td {
+      padding: 0.95em 0.7em;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+    th {
+      background: #e0f2f1;
+      color: #1976d2;
+      font-weight: 600;
+    }
+    tr:hover {
+      background: #f1f8e9;
+      transition: background 0.2s;
+    }
+    .btn-comprar {
+      background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 0.5em 1.1em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 1px 6px rgba(24,90,157,0.10);
+    }
+    .btn-comprar:hover {
+      background: linear-gradient(90deg, #185a9d 0%, #43cea2 100%);
+      transform: scale(1.05);
+    }
+    @media (max-width: 650px) {
+      .container {
+        padding: 1em 0.4em;
+      }
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      tr {
+        margin-bottom: 1.3em;
+        box-shadow: 0 1px 4px rgba(33,150,243,0.07);
+        background: #fff;
+        border-radius: 8px;
+      }
+      td {
+        border: none;
+        position: relative;
+        padding-left: 52%;
+        margin-bottom: 0.5em;
+      }
+      td:before {
+        position: absolute;
+        left: 1em;
+        top: 0.9em;
+        width: 45%;
+        font-weight: bold;
+        white-space: nowrap;
+      }
+      td:nth-of-type(1):before { content: "ID"; }
+      td:nth-of-type(2):before { content: "Nombre"; }
+      td:nth-of-type(3):before { content: "Categoría"; }
+      td:nth-of-type(4):before { content: "Presentación"; }
+      td:nth-of-type(5):before { content: "Precio"; }
+      td:nth-of-type(6):before { content: "Stock"; }
+      td:nth-of-type(7):before { content: "Acción"; }
+    }
   </style>
 </head>
 <body>
-  <h1>School Cafeteria Products</h1>
-  <table id="products-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Price ($)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Products will be inserted here -->
-    </tbody>
-  </table>
+  <div class="banner">
+    <h1>Productos de Farmacia</h1>
+    <p>Encuentra aquí los medicamentos y productos de salud disponibles</p>
+  </div>
+  <div class="container">
+    <table id="products-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Presentación</th>
+          <th>Precio ($)</th>
+          <th>Stock</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Los productos serán insertados aquí -->
+      </tbody>
+    </table>
+  </div>
   <script>
-    fetch('/products')
-      .then(response => response.json())
-      .then(products => {
-        const tbody = document.querySelector('#products-table tbody');
-        products.forEach(product => {
-          const row = document.createElement('tr');
-          row.innerHTML = `<td>${product.id}</td><td>${product.name}</td><td>${product.price.toFixed(2)}</td>`;
-          tbody.appendChild(row);
-        });
-      })
-      .catch(err => {
-        alert('Error loading products');
-      });
+    // Simulando productos de farmacia (puedes reemplazar esto por fetch a tu backend)
+    const products = [
+      { id: 1, name: "Paracetamol", category: "Analgésico", presentation: "Caja 20 tabletas", price: 2.50, stock: 30 },
+      { id: 2, name: "Ibuprofeno", category: "Antiinflamatorio", presentation: "Blíster 10 tabletas", price: 3.20, stock: 18 },
+      { id: 3, name: "Suero Oral", category: "Rehidratante", presentation: "Botella 500ml", price: 4.00, stock: 10 },
+      { id: 4, name: "Vitamina C", category: "Suplemento", presentation: "Frasco 60 cápsulas", price: 7.00, stock: 25 },
+      { id: 5, name: "Alcohol", category: "Antiséptico", presentation: "Botella 1 litro", price: 2.80, stock: 45 },
+      { id: 6, name: "Mascarilla KN95", category: "Protección", presentation: "Unidad", price: 1.50, stock: 100 }
+    ];
+    const tbody = document.querySelector('#products-table tbody');
+    products.forEach(product => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${product.id}</td>
+        <td>${product.name}</td>
+        <td>${product.category}</td>
+        <td>${product.presentation}</td>
+        <td>${product.price.toFixed(2)}</td>
+        <td>${product.stock}</td>
+        <td>
+          <button class="btn-comprar" onclick="alert('Agregado al carrito: ${product.name}')">Comprar</button>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
   </script>
 </body>
 </html>
