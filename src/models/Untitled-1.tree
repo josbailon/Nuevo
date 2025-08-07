@@ -1,0 +1,12 @@
+```
+└── 📁src
+    └── 📁controllers
+        ├── index.js
+    └── 📁models
+        ├── index.js
+        ├── products.js
+    └── 📁routes
+        ├── index.js
+        ├── products.js
+    └── server.js
+```
