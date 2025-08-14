@@ -43,17 +43,17 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Detener y eliminar contenedor previo si existe, y limpiar puerto
+                // Limpiar contenedores anteriores de forma más robusta
                 sh '''
-                    # Detener contenedor si existe
-                    docker stop school-cafeteria-api || true
-                    docker rm school-cafeteria-api || true
+                    # Forzar detención y eliminación de cualquier contenedor con este nombre
+                    docker ps -a -q --filter "name=school-cafeteria-api" | xargs -r docker stop
+                    docker ps -a -q --filter "name=school-cafeteria-api" | xargs -r docker rm -f
                     
-                    # Matar cualquier proceso usando el puerto 3000
-                    sudo fuser -k 3000/tcp || true
+                    # Limpiar cualquier proceso usando el puerto 3000 (sin sudo)
+                    lsof -ti:3000 | xargs -r kill -9 || true
                     
-                    # Esperar un momento para que se libere el puerto
-                    sleep 2
+                    # Esperar un momento para que se libere completamente
+                    sleep 3
                 '''
                 
                 // Ejecutar el nuevo contenedor
