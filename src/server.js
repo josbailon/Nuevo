@@ -13,7 +13,12 @@ app.get('/products', (req, res) => {
   res.json(products);
 });
 
-// Start server on port 3000
-app.listen(3000, () => {
-  console.log('Server running on http://localhost:3000');
-});
+// Exportar app para pruebas
+module.exports = app;
+
+// Iniciar el servidor solo si se ejecuta directamente
+if (require.main === module) {
+  app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+  });
+}

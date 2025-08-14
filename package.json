@@ -4,7 +4,7 @@
   "description": "A REST API for managing a school cafeteria.",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
+  "start": "npm test && node src/server.js",
     "test": "jest"
   },
   "dependencies": {
