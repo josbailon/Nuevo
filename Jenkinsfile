@@ -28,7 +28,8 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Ejecuta los tests de la aplicación
+                // Dar permisos de ejecución a Jest y ejecutar los tests
+                sh 'chmod +x ./node_modules/.bin/jest'
                 sh 'npm test'
             }
         }
