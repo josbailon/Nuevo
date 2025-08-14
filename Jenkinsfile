@@ -43,15 +43,22 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Detener y eliminar contenedor previo si existe
+                // Detener y eliminar contenedor previo si existe, y limpiar puerto
                 sh '''
-                    docker stop $DOCKER_IMAGE || true
-                    docker rm $DOCKER_IMAGE || true
+                    # Detener contenedor si existe
+                    docker stop school-cafeteria-api || true
+                    docker rm school-cafeteria-api || true
+                    
+                    # Matar cualquier proceso usando el puerto 3000
+                    sudo fuser -k 3000/tcp || true
+                    
+                    # Esperar un momento para que se libere el puerto
+                    sleep 2
                 '''
                 
                 // Ejecutar el nuevo contenedor
                 sh '''
-                    docker run -d --name $DOCKER_IMAGE -p 3000:3000 $DOCKER_IMAGE:latest
+                    docker run -d --name school-cafeteria-api -p 3000:3000 school-cafeteria-api:latest
                 '''
                 
                 echo 'Aplicación desplegada en http://localhost:3000'
