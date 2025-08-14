@@ -3,62 +3,50 @@ pipeline {
 
     tools {
         nodejs "Node24"
-        dockerTool "Dockertool"
+        dockerTool "Dockertool" 
     }
-
-    environment {
-        // Puedes definir variables de entorno aquí si necesitas
-        DOCKER_IMAGE = 'school-cafeteria-api'
+    
+    triggers {
+        // Polls the SCM every 2 minutes
+        pollSCM('*/2 * * * *')
     }
-
+    
     stages {
         stage('Checkout') {
             steps {
-                // Descarga el código del repositorio configurado
                 checkout scm
             }
         }
-
         stage('Install dependencies') {
             steps {
-                // Instala todas las dependencias de Node.js
-                sh 'npm install'
+                sh 'npm install' 
             }
         }
-
+        
+        stage('Ejecutar Tests') {
+            steps {
+                sh 'chmod +x ./node_modules/.bin/jest'
+                sh 'npm test -- --ci --runInBand'
+            }
+        }
+ 
         stage('Build Docker image') {
             steps {
-                // Construye la imagen Docker
-                sh "docker build -t $DOCKER_IMAGE ."
+                sh 'docker build -t school-cafeteria-api .'
             }
         }
 
-        // Puedes añadir más etapas según lo que necesites
-        // Por ejemplo, pruebas, push a DockerHub, deploy, etc.
-        /*
-        stage('Test') {
+        stage('Ejecutar Contenedor Node.js') {
             steps {
-                sh 'npm test'
+                sh '''
+                    # Detener y eliminar cualquier contenedor previo
+                    docker stop school-cafeteria-api || true
+                    docker rm school-cafeteria-api || true
+ 
+                    # Ejecutar el contenedor de la aplicación
+                    docker run -d --name school-cafeteria-api -p 3000:3000 school-cafeteria-api:latest
+                '''
             }
-        }
-
-        stage('Push Docker image') {
-            steps {
-                sh "docker push $DOCKER_IMAGE"
-            }
-        }
-        */
-    }
-    // Puedes agregar bloque de post para limpieza o notificaciones
-    post {
-        always {
-            echo 'El pipeline ha terminado (éxito o fallo)'
-        }
-        success {
-            echo '¡Pipeline exitoso!'
-        }
-        failure {
-            echo 'El pipeline falló.'
         }
     }
 }
