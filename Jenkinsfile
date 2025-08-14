@@ -43,25 +43,27 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Limpiar contenedores anteriores de forma más robusta
+                // Estrategia simplificada para Jenkins GUI
                 sh '''
-                    # Forzar detención y eliminación de cualquier contenedor con este nombre
-                    docker ps -a -q --filter "name=school-cafeteria-api" | xargs -r docker stop
-                    docker ps -a -q --filter "name=school-cafeteria-api" | xargs -r docker rm -f
+                    # Detener y remover contenedor existente de manera forzada
+                    docker stop school-cafeteria-api >/dev/null 2>&1 || echo "No hay contenedor corriendo"
+                    docker rm -f school-cafeteria-api >/dev/null 2>&1 || echo "No hay contenedor que remover"
                     
-                    # Limpiar cualquier proceso usando el puerto 3000 (sin sudo)
-                    lsof -ti:3000 | xargs -r kill -9 || true
+                    # Limpiar imágenes huérfanas
+                    docker container prune -f >/dev/null 2>&1 || true
                     
-                    # Esperar un momento para que se libere completamente
+                    # Esperar para asegurar limpieza
+                    sleep 5
+                    
+                    # Ejecutar nuevo contenedor con reinicio automático
+                    docker run -d --name school-cafeteria-api --restart unless-stopped -p 3000:3000 school-cafeteria-api:latest
+                    
+                    # Verificar que el contenedor esté corriendo
                     sleep 3
+                    docker ps | grep school-cafeteria-api || (echo "Error: El contenedor no se inició correctamente" && exit 1)
                 '''
                 
-                // Ejecutar el nuevo contenedor
-                sh '''
-                    docker run -d --name school-cafeteria-api -p 3000:3000 school-cafeteria-api:latest
-                '''
-                
-                echo 'Aplicación desplegada en http://localhost:3000'
+                echo 'Aplicación desplegada exitosamente en http://localhost:3000'
             }
         }
 
