@@ -26,6 +26,13 @@ pipeline {
             }
         }
 
+        stage('Test') {
+            steps {
+                // Ejecuta los tests de la aplicación
+                sh 'npm test'
+            }
+        }
+
         stage('Build Docker image') {
             steps {
                 // Construye la imagen Docker
@@ -33,15 +40,26 @@ pipeline {
             }
         }
 
-        // Puedes añadir más etapas según lo que necesites
-        // Por ejemplo, pruebas, push a DockerHub, deploy, etc.
-        /*
-        stage('Test') {
+        stage('Deploy') {
             steps {
-                sh 'npm test'
+                // Detener y eliminar contenedor previo si existe
+                sh '''
+                    docker stop $DOCKER_IMAGE || true
+                    docker rm $DOCKER_IMAGE || true
+                '''
+                
+                // Ejecutar el nuevo contenedor
+                sh '''
+                    docker run -d --name $DOCKER_IMAGE -p 3000:3000 $DOCKER_IMAGE:latest
+                '''
+                
+                echo 'Aplicación desplegada en http://localhost:3000'
             }
         }
 
+        // Puedes añadir más etapas según lo que necesites
+        // Por ejemplo, push a DockerHub, etc.
+        /*
         stage('Push Docker image') {
             steps {
                 sh "docker push $DOCKER_IMAGE"
